@@ -21,6 +21,10 @@ namespace StarterAssets
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
 
+		public float staminaMax = 100f;
+		private float staminaNow;
+		private bool canRun = true;
+
 		[Space(10)]
 		[Tooltip("The height the player can jump")]
 		public float JumpHeight = 1.2f;
@@ -101,6 +105,8 @@ namespace StarterAssets
 			_input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM
 			_playerInput = GetComponent<PlayerInput>();
+
+			staminaNow = staminaMax;
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
@@ -155,6 +161,26 @@ namespace StarterAssets
 		{
 			// set target speed based on move speed, sprint speed and if sprint is pressed
 			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+
+			if (_input.sprint && staminaNow > 0 && canRun)
+			{
+				targetSpeed = SprintSpeed;
+				staminaNow -= Time.deltaTime * 20;
+			}
+			else
+			{
+				targetSpeed = MoveSpeed;
+				staminaNow += Time.deltaTime * 8;
+				if (staminaNow > 30)
+				{
+					canRun = true;
+                    HUDManager.instance.staminaColor.color = Color.Lerp(HUDManager.instance.staminaColor.color, Color.yellow, Time.deltaTime * 5);
+                }
+			}
+
+			staminaNow = Mathf.Clamp(staminaNow, 0f, staminaMax);
+
+			StamineManager();
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -252,6 +278,26 @@ namespace StarterAssets
 			if (lfAngle > 360f) lfAngle -= 360f;
 			return Mathf.Clamp(lfAngle, lfMin, lfMax);
 		}
+
+		void StamineManager()
+		{
+			if (staminaNow <= 0)
+			{
+				canRun = false;
+				HUDManager.instance.staminaColor.color = Color.red;
+			}
+
+			if (staminaNow >= staminaMax)
+			{
+				HUDManager.instance.staminaBar.gameObject.SetActive(false);
+			}
+			else
+			{
+				HUDManager.instance.staminaBar.gameObject.SetActive(true);
+			}
+
+            HUDManager.instance.staminaBar.value = staminaNow;
+        }
 
 		private void OnDrawGizmosSelected()
 		{
