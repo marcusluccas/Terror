@@ -50,6 +50,8 @@ public class HUDManager : MonoBehaviour
         {
             monsterObj.SetActive(false);
             victoryScreen.SetActive(true);
+            GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterController>().enabled = false;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 
