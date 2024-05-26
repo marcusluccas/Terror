@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,11 @@ public class HUDManager : MonoBehaviour
 
     public Slider staminaBar;
     public Image staminaColor;
+    public GameObject pressE;
+    public Text paperCount;
+    public int papers;
+    public GameObject monsterObj;
+    public GameObject victoryScreen;
 
     private void Awake()
     {
@@ -32,5 +38,23 @@ public class HUDManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void AddPaper()
+    {
+        papers++;
+        PaperCount();
+        monsterObj.SetActive(true);
+
+        if (papers >= 5)
+        {
+            monsterObj.SetActive(false);
+            victoryScreen.SetActive(true);
+        }
+    }
+
+    void PaperCount()
+    {
+        paperCount.text = papers.ToString() + "/5";
     }
 }
