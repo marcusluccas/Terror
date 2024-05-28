@@ -174,11 +174,14 @@ namespace StarterAssets
 				if (staminaNow > 30)
 				{
 					canRun = true;
-                    HUDManager.instance.staminaColor.color = Color.Lerp(HUDManager.instance.staminaColor.color, Color.yellow, Time.deltaTime * 5);
                 }
 			}
+            if (staminaNow > 30)
+            {
+                HUDManager.instance.staminaColor.color = Color.Lerp(HUDManager.instance.staminaColor.color, Color.yellow, Time.deltaTime * 10);
+            }
 
-			staminaNow = Mathf.Clamp(staminaNow, 0f, staminaMax);
+            staminaNow = Mathf.Clamp(staminaNow, 0f, staminaMax);
 
 			StamineManager();
 
