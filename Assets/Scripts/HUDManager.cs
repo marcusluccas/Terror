@@ -16,6 +16,10 @@ public class HUDManager : MonoBehaviour
     public GameObject monsterObj;
     public GameObject victoryScreen;
 
+    public Text bulletText;
+
+    GameObject player;
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -31,13 +35,14 @@ public class HUDManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.FindGameObjectWithTag("Player");
+        BulletCount();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void AddPaper()
@@ -58,5 +63,10 @@ public class HUDManager : MonoBehaviour
     void PaperCount()
     {
         paperCount.text = papers.ToString() + "/5";
+    }
+
+    public void BulletCount()
+    {
+        bulletText.text = player.GetComponent<Shooting>().currentBullet + "/" + player.GetComponent<Shooting>().invBullet;
     }
 }
