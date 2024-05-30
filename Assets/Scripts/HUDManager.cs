@@ -67,6 +67,6 @@ public class HUDManager : MonoBehaviour
 
     public void BulletCount()
     {
-        bulletText.text = player.GetComponent<Shooting>().currentBullet + "/" + player.GetComponent<Shooting>().invBullet;
+        bulletText.text = player.GetComponent<Shooting>().currentBullet[player.GetComponent<Shooting>().selectedGun].ToString() + "/" + player.GetComponent<Shooting>().invBullet[player.GetComponent<Shooting>().selectedGun].ToString();
     }
 }
