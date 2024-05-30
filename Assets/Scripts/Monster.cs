@@ -9,6 +9,8 @@ public class Monster : MonoBehaviour
     public GameObject gameOverScreen;
     public GameObject gameOverAnimation;
 
+    public int hp = 3;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +21,16 @@ public class Monster : MonoBehaviour
     void Update()
     {
         GetComponent<NavMeshAgent>().destination = player.transform.position;
+    }
+
+    public void RemoveHP(int demage)
+    {
+        hp -= demage;
+
+        if (hp <= 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

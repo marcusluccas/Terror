@@ -7,6 +7,7 @@ public class Shooting : MonoBehaviour
 {
     public GameObject[] gunObj;
     public GameObject[] pointedObj;
+    public GameObject[] gunFrontObj;
 
     public int selectedGun;
 
@@ -50,7 +51,6 @@ public class Shooting : MonoBehaviour
         FlashlightState();
         ChangeGun();
 
-        Debug.Log(currentBullet[selectedGun] + "/" + maxBullet[selectedGun]);
         if (Input.GetKeyDown(KeyCode.R) && currentBullet[selectedGun] != maxBullet[selectedGun])
         {
             reloadCooldown = reloadTime;
@@ -102,16 +102,20 @@ public class Shooting : MonoBehaviour
 
             HUDManager.instance.BulletCount();
 
-            GameObject particle = Instantiate(particleShoot, gunObj[selectedGun].transform);
-            particle.transform.localPosition = new Vector3(0f, 0.025f, 1.5f);
-            Destroy(particle, 1f);
+            GameObject particle = Instantiate(particleShoot, gunFrontObj[selectedGun].transform.position, Quaternion.identity);
+            particle.transform.parent = gunFrontObj[selectedGun].transform;
+            Destroy(particle, 0.05f);
 
+            if (bulletHit.transform.tag == "EnemyHead")
+            {
+                bulletHit.transform.gameObject.GetComponentInParent<Monster>().RemoveHP(5);
+            }
             if (bulletHit.transform.tag == "Enemy")
             {
-                Destroy(bulletHit.transform.gameObject);
+                bulletHit.transform.gameObject.GetComponent<Monster>().RemoveHP(1);
             }
 
-            gunObj[selectedGun].transform.position += new Vector3(Random.Range(-0.05f, 0.05f), Random.Range(-0.05f, 0.25f), 0f);
+            gunObj[selectedGun].transform.position += new Vector3(Random.Range(-0.05f, 0.05f), Random.Range(-0.05f, 0.05f), 0f);
         }
     }
 
